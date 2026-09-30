@@ -119,7 +119,73 @@ function grafikleriGuncelle(liste) {
   });
 }
 
-// 4) Sayfa yüklenince veriyi çek ve ekrana yansıt
+// 4) Seçim kutusuna seçenek ekler
+function secenekEkle(kutu, deger, yazi) {
+  const secenek = document.createElement("option");
+  secenek.value = deger;
+  secenek.textContent = yazi;
+  kutu.appendChild(secenek);
+}
+
+// 5) Filtre kutularını veriden doldurur
+function filtreleriHazirla() {
+  const istasyonKutu = document.getElementById("istasyonSec");
+  const baslangicKutu = document.getElementById("baslangicSec");
+  const bitisKutu = document.getElementById("bitisSec");
+
+  const istasyonlar = Array.from(new Set(veri.map(function (s) {
+    return s.istasyon;
+  })));
+  const tarihler = Array.from(new Set(veri.map(function (s) {
+    return s.tarih;
+  }))).sort();
+
+  istasyonlar.forEach(function (ad) {
+    secenekEkle(istasyonKutu, ad, ad);
+  });
+
+  tarihler.forEach(function (t) {
+    secenekEkle(baslangicKutu, t, t.slice(0, 7));
+    secenekEkle(bitisKutu, t, t.slice(0, 7));
+  });
+
+  // Varsayılan: tüm dönem
+  baslangicKutu.value = tarihler[0];
+  bitisKutu.value = tarihler[tarihler.length - 1];
+
+  // Seçim değişince filtreyi yeniden uygula
+  istasyonKutu.addEventListener("change", filtreUygula);
+  baslangicKutu.addEventListener("change", filtreUygula);
+  bitisKutu.addEventListener("change", filtreUygula);
+}
+
+// 6) Seçimlere göre veriyi süzer ve ekranı günceller
+function filtreUygula() {
+  const istasyon = document.getElementById("istasyonSec").value;
+  const baslangic = document.getElementById("baslangicSec").value;
+  const bitis = document.getElementById("bitisSec").value;
+  const uyari = document.getElementById("uyari");
+
+  const liste = veri.filter(function (s) {
+    const istasyonUygun = istasyon === "hepsi" || s.istasyon === istasyon;
+    return istasyonUygun && s.tarih >= baslangic && s.tarih <= bitis;
+  });
+
+  if (liste.length === 0) {
+    uyari.textContent = "Bu aralıkta veri yok. Başlangıç, bitişten önce olmalı.";
+    ["kpiTonaj", "kpiZaman", "kpiDoluluk"].forEach(function (id) {
+      document.getElementById(id).textContent = "-";
+    });
+    grafikleriGuncelle([]);
+    return;
+  }
+
+  uyari.textContent = "";
+  kartlariGuncelle(liste);
+  grafikleriGuncelle(liste);
+}
+
+// 7) Sayfa yüklenince veriyi çek ve başlat
 function baslat() {
   fetch("data.csv")
     .then(function (yanit) {
@@ -127,8 +193,8 @@ function baslat() {
     })
     .then(function (metin) {
       veri = csvOku(metin);
-      kartlariGuncelle(veri);
-      grafikleriGuncelle(veri);;
+      filtreleriHazirla();
+      filtreUygula();
     })
     .catch(function (hata) {
       console.error("Veri okunamadı:", hata);
