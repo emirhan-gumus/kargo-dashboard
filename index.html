@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kargo KPI Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>Kargo KPI Dashboard</h1>
+    <p>Örnek veriyle hazırlanmış operasyon paneli</p>
+  </header>
+
+  <main>
+    <!-- Filtreler (Adım 7'de çalışacak) -->
+    <section class="filtreler">
+      <label>İstasyon:
+        <select id="istasyonSec">
+          <option value="hepsi">Tümü</option>
+        </select>
+      </label>
+    </section>
+
+    <!-- KPI kartları (Adım 5'te dolacak) -->
+    <section class="kartlar">
+      <div class="kart"><span>Toplam Tonaj</span><strong id="kpiTonaj">-</strong></div>
+      <div class="kart"><span>Zamanında Teslim</span><strong id="kpiZaman">-</strong></div>
+      <div class="kart"><span>Doluluk Oranı</span><strong id="kpiDoluluk">-</strong></div>
+    </section>
+
+    <!-- Grafikler (Adım 6'da çizilecek) -->
+    <section class="grafikler">
+      <div class="grafik-kutu"><canvas id="cizgiGrafik"></canvas></div>
+      <div class="grafik-kutu"><canvas id="cubukGrafik"></canvas></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Tüm veriler örnek amaçlıdır.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
