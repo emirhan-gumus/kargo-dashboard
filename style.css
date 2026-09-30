@@ -41,12 +41,16 @@ main {
   margin-bottom: 20px;
 }
 
-.filtreler select {
-  padding: 8px 12px;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  font-size: 1rem;
-  background: #fff;
+.filtreler {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+#uyari {
+  color: #b91c1c;
+  margin-bottom: 16px;
 }
 
 /* KPI kartları */
